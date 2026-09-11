@@ -4,13 +4,11 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        
-        // Database for this project
         ArrayList<Product> inventory = new ArrayList<>(); 
         boolean isRunning = true;
 
         while (isRunning) {
-            System.out.println("\n Product Manager Menu:");
+            System.out.println("\n🛒 Product Manager Menu:");
             System.out.println("1. Add product");
             System.out.println("2. List products");
             System.out.println("3. Search product");
@@ -20,60 +18,94 @@ public class Main {
             System.out.print("Choose an option: ");
 
             int choice = scanner.nextInt();
-            scanner.nextLine(); // This prevents a common Scanner bug by consuming the Enter key
+            scanner.nextLine(); 
 
-            if (choice == 1) 
-            {
-                // TODO: Ask user for name, price, and quantity. 
+            if (choice == 1) {
                 System.out.print("Enter product name: ");
                 String name = scanner.nextLine();
-    
-                System.out.print("Enter product price: ");
-                double price = scanner.nextDouble();
-    
-                System.out.print("Enter product quantity: ");
-                int quantity = scanner.nextInt();
-                // Create a new Product and add it to the inventory list.
-                Product newProduct = new Product(name, price, quantity);
-    
-                // Save it to the ArrayList
-                inventory.add(newProduct);
-    
-                System.out.println("✅ " + name + " added to inventory!");
                 
-            } 
-            
-            else if (choice == 2) 
-            {
-                // TODO: Use a for loop to print every product in the inventory.
-                if (inventory.isEmpty()) 
-                {
+                try {
+                    System.out.print("Enter product price: ");
+                    double price = scanner.nextDouble();
+                    
+                    System.out.print("Enter product quantity: ");
+                    int quantity = scanner.nextInt();
+                    
+                    System.out.print("Enter category (ELECTRONICS, SPORTS_GEAR, COURSE_MATERIALS, OTHER): ");
+                    String categoryInput = scanner.next(); 
+                    
+                    Product.Category category = Product.Category.valueOf(categoryInput.toUpperCase());
+                    
+                    Product newProduct = new Product(name, price, quantity, category);
+                    inventory.add(newProduct);
+                    
+                    System.out.println("✅ " + name + " added to inventory!");
+                    
+                } catch (Exception e) {
+                    System.out.println("❌ Invalid input! Please check your numbers or category spelling.");
+                } finally {
+                    scanner.nextLine(); 
+                }
+                
+            } else if (choice == 2) {
+                if (inventory.isEmpty()) {
                     System.out.println("The inventory is currently empty.");
-                } 
-                else 
-                {
+                } else {
                     System.out.println("\n📦 Current Inventory:");
-        
-                    // 2. The enhanced for loop (what you asked about in your very first question!)
-                    for (Product item : inventory) 
-                    {
-                        System.out.println("- " + item.name + " | Price: $" + item.price + " | Qty: " + item.quantity);
+                    for (Product item : inventory) {
+                        System.out.println("- [" + item.category + "] " + item.name + " | Price: $" + item.price + " | Qty: " + item.quantity);
                     }
                 }
-              
                 
             } else if (choice == 3) {
-                // TODO: Ask for a name, loop through the list, and print if found.
+                System.out.print("Enter the name of the product to search: ");
+                String searchName = scanner.nextLine();
+                
+                boolean found = false; 
+                for (Product item : inventory) {
+                    if (item.name.equalsIgnoreCase(searchName)) {
+                        System.out.println("✅ Found: [" + item.category + "] " + item.name + " | Price: $" + item.price + " | Qty: " + item.quantity);
+                        found = true;
+                        break; 
+                    }
+                }
+
+                if (!found) {
+                    System.out.println("❌ Product '" + searchName + "' not found in inventory.");
+                }
                 
             } else if (choice == 4) {
-                // TODO: Ask for a name, find it, and remove it from the list.
+                System.out.print("Enter the name of the product to remove: ");
+                String removeName = scanner.nextLine();
+                
+                Product productToRemove = null; 
+
+                for (Product item : inventory) {
+                    if (item.name.equalsIgnoreCase(removeName)) {
+                        productToRemove = item;
+                        break; 
+                    }
+                }
+
+                if (productToRemove != null) {
+                    inventory.remove(productToRemove);
+                    System.out.println("🗑️ Successfully removed " + productToRemove.name + " from inventory.");
+                } else {
+                    System.out.println("❌ Product '" + removeName + "' not found.");
+                }
                 
             } else if (choice == 5) {
-                // TODO: Multiply price by quantity for every product and add to a total.
+                double totalValue = 0.0; 
+
+                for (Product item : inventory) {
+                    totalValue += (item.price * item.quantity); 
+                }
+
+                System.out.println("💰 Total Inventory Value: $" + totalValue);
                 
             } else if (choice == 6) {
                 System.out.println("Exiting Product Manager. Goodbye!");
-                isRunning = false; // This breaks the loop
+                isRunning = false; 
                 
             } else {
                 System.out.println("Invalid choice. Please pick a number from 1 to 6.");
