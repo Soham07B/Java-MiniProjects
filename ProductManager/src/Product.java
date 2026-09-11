@@ -1,12 +1,21 @@
 public class Product {
+    
+    public enum Category {
+        ELECTRONICS, 
+        SPORTS_GEAR, 
+        COURSE_MATERIALS, 
+        OTHER
+    }
+
     String name;
     double price;
     int quantity;
+    Category category; 
 
-    // Constructor to easily create products from user input
-    public Product(String name, double price, int quantity) {
+    public Product(String name, double price, int quantity, Category category) {
         this.name = name;
         this.price = price;
         this.quantity = quantity;
+        this.category = category;
     }
 }
